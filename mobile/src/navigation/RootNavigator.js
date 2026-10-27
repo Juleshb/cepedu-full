@@ -1,18 +1,20 @@
 import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeBottomTabNavigator } from "@react-navigation/bottom-tabs/unstable";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Platform, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../AuthContext";
 import ApplyLoanScreen from "../screens/ApplyLoanScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
-import ChatScreen from "../screens/ChatScreen";
 import HomeScreen from "../screens/HomeScreen";
-import MessagesScreen from "../screens/MessagesScreen";
 import LoanDetailScreen from "../screens/LoanDetailScreen";
 import LoansScreen from "../screens/LoansScreen";
 import LoginScreen from "../screens/LoginScreen";
+import ChatScreen from "../screens/ChatScreen";
+import MessagesScreen from "../screens/MessagesScreen";
 import OtpScreen from "../screens/OtpScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
@@ -21,7 +23,16 @@ import TransactionsScreen from "../screens/TransactionsScreen";
 import { colors, fonts } from "../theme";
 
 const Stack = createNativeStackNavigator();
-const Tab = createNativeBottomTabNavigator();
+const IosTab = createNativeBottomTabNavigator();
+const AndroidTab = createBottomTabNavigator();
+
+const TAB_ICONS = {
+  Home: ["home-outline", "home"],
+  Activity: ["swap-horizontal-outline", "swap-horizontal"],
+  Loans: ["cash-outline", "cash"],
+  Messages: ["chatbubbles-outline", "chatbubbles"],
+  Profile: ["person-outline", "person"],
+};
 
 function tabIcon(name, focusedName) {
   return ({ focused }) => ({
@@ -42,9 +53,45 @@ const navTheme = {
   },
 };
 
-function MemberTabs() {
+function AndroidMemberTabs() {
   return (
-    <Tab.Navigator
+    <AndroidTab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.mute,
+        tabBarStyle: {
+          backgroundColor: colors.panel,
+          borderTopColor: colors.line,
+          borderTopWidth: 1,
+          paddingTop: 6,
+        },
+        tabBarLabelStyle: {
+          fontFamily: fonts.medium,
+          fontSize: 11,
+        },
+        tabBarIcon: ({ color, size, focused }) => {
+          const pair = TAB_ICONS[route.name] || TAB_ICONS.Home;
+          return <Ionicons name={focused ? pair[1] : pair[0]} color={color} size={size} />;
+        },
+      })}
+    >
+      <AndroidTab.Screen name="Home" component={HomeScreen} />
+      <AndroidTab.Screen
+        name="Activity"
+        component={TransactionsScreen}
+        options={{ title: "Activity" }}
+      />
+      <AndroidTab.Screen name="Loans" component={LoansScreen} />
+      <AndroidTab.Screen name="Messages" component={MessagesScreen} />
+      <AndroidTab.Screen name="Profile" component={ProfileScreen} />
+    </AndroidTab.Navigator>
+  );
+}
+
+function IosMemberTabs() {
+  return (
+    <IosTab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
@@ -52,12 +99,12 @@ function MemberTabs() {
         tabBarControllerMode: "tabBar",
       }}
     >
-      <Tab.Screen
+      <IosTab.Screen
         name="Home"
         component={HomeScreen}
         options={{ tabBarIcon: tabIcon("house", "house.fill") }}
       />
-      <Tab.Screen
+      <IosTab.Screen
         name="Activity"
         component={TransactionsScreen}
         options={{
@@ -65,25 +112,27 @@ function MemberTabs() {
           tabBarIcon: tabIcon("arrow.left.arrow.right"),
         }}
       />
-      <Tab.Screen
-        name="Messages"
-        component={MessagesScreen}
-        options={{
-          tabBarIcon: tabIcon("bubble.left.and.bubble.right", "bubble.left.and.bubble.right.fill"),
-        }}
-      />
-      <Tab.Screen
+      <IosTab.Screen
         name="Loans"
         component={LoansScreen}
         options={{ tabBarIcon: tabIcon("banknote", "banknote.fill") }}
       />
-      <Tab.Screen
+      <IosTab.Screen
+        name="Messages"
+        component={MessagesScreen}
+        options={{ tabBarIcon: tabIcon("message", "message.fill") }}
+      />
+      <IosTab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{ tabBarIcon: tabIcon("person", "person.fill") }}
       />
-    </Tab.Navigator>
+    </IosTab.Navigator>
   );
+}
+
+function MemberTabs() {
+  return Platform.OS === "android" ? <AndroidMemberTabs /> : <IosMemberTabs />;
 }
 
 function focusedRouteName(state) {

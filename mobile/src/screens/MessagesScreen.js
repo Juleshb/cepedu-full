@@ -90,7 +90,9 @@ export default function MessagesScreen({ navigation }) {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.white} />
       }
     >
-      <Text style={styles.lead}>Talk with members, or join Everyone.</Text>
+      <Text style={styles.lead}>
+        Talk with every member in Everyone, or open a private conversation.
+      </Text>
       <Notice message={error} />
       <TextInput
         value={query}

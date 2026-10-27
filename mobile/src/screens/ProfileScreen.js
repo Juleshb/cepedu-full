@@ -171,11 +171,6 @@ export default function ProfileScreen({ navigation }) {
 
       <Text style={styles.section}>Actions</Text>
       <Action
-        icon="chatbubbles-outline"
-        label="Messages"
-        onPress={() => navigation.navigate("Messages")}
-      />
-      <Action
         icon="swap-horizontal-outline"
         label="Transactions"
         onPress={() => navigation.navigate("Activity")}

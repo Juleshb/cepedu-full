@@ -81,7 +81,7 @@ export function Screen({
       style={styles.fill}
       contentContainerStyle={[
         styles.grow,
-        { paddingBottom: insets.bottom + (tabPad ? 108 : 28) },
+        { paddingBottom: insets.bottom + (tabPad && Platform.OS === "ios" ? 108 : 28) },
       ]}
       keyboardShouldPersistTaps="handled"
       refreshControl={refreshControl}

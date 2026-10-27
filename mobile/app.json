@@ -12,7 +12,7 @@
       "bundleIdentifier": "org.cepedhu.member",
       "infoPlist": {
         "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
+          "NSAllowsLocalNetworking": true
         }
       }
     },
