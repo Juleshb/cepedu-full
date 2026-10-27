@@ -37,7 +37,7 @@ const BatchRegister = () => {
             setProgress(0);
             const token = localStorage.getItem('token');
             await axios.post(
-                'http://188.137.183.73:4000/api/users/batch-register',
+                '/api/users/batch-register',
                 formData,
                 {
                     headers: {

@@ -62,7 +62,7 @@ function UserProfile() {
   const axiosInstance = useMemo(
     () =>
       axios.create({
-        baseURL: "http://188.137.183.73:4000/api",
+        baseURL: "/api",
         headers: { Authorization: `Bearer ${token}` },
       }),
     [token]

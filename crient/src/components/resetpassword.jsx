@@ -20,7 +20,7 @@ const ResetPassword = () => {
       }
 
       const response = await fetch(
-        "http://188.137.183.73:4000/api/users/reset-password",
+        "/api/users/reset-password",
         {
           method: "POST",
           headers: {

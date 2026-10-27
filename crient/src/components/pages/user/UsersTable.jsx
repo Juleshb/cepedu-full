@@ -17,7 +17,7 @@ const UsersTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://188.137.183.73:4000/api/users");
+        const response = await axios.get("/api/users");
   
         if (response.data && Array.isArray(response.data)) {
           setUsers(response.data); 
@@ -68,7 +68,7 @@ const UsersTable = () => {
   const handleDelete = async (userId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await axios.delete(`http://188.137.183.73:4000/api/users/${userId}`);
+        await axios.delete(`/api/users/${userId}`);
         setUsers(users.filter((user) => user.user_id !== userId));
         alert("User deleted successfully.");
       } catch (error) {
@@ -80,7 +80,7 @@ const UsersTable = () => {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(
-        `http://188.137.183.73:4000/api/users/${selectedUser.user_id}`,
+        `/api/users/${selectedUser.user_id}`,
         selectedUser
       );
       setUsers(

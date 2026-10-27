@@ -43,7 +43,7 @@ const Registration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://188.137.183.73:4000/api/users/register", formData);
+      const response = await axios.post("/api/users/register", formData);
 
       if (response.status === 201) {
         setSuccessMessage("Registration successful!");
