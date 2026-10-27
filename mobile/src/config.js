@@ -1,21 +1,9 @@
-import Constants from "expo-constants";
-import { Platform } from "react-native";
-
-function debuggerHost() {
-  const hostUri =
-    Constants.expoConfig?.hostUri || Constants.expoGoConfig?.debuggerHost || "";
-  return hostUri.split(":")[0];
-}
+const PRODUCTION_API = "http://188.137.183.73:4000/api";
 
 export function resolveApiBase() {
   const fromEnv = process.env.EXPO_PUBLIC_API_URL;
   if (fromEnv) return fromEnv.replace(/\/$/, "");
-
-  const host = debuggerHost();
-  if (host) return `http://${host}:4000/api`;
-
-  const fallback = Platform.OS === "android" ? "10.0.2.2" : "localhost";
-  return `http://${fallback}:4000/api`;
+  return PRODUCTION_API;
 }
 
 export const API_BASE = resolveApiBase();
