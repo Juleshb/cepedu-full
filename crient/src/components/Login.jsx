@@ -23,7 +23,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/users/login",
+        "http://188.137.183.73:4000/api/users/login",
         { emailOrPhone, password }
       );
 

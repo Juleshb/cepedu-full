@@ -11,7 +11,7 @@ const LoanApply = () => {
   const token = localStorage.getItem('token');
 
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:4000/api',
+    baseURL: 'http://188.137.183.73:4000/api',
     headers: {
       Authorization: `Bearer ${token}`,
     },
