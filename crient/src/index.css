@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1b4d3e;
+  --color-accent: #c4a35a;
+  --color-page: #fcf5eb;
+  --color-ink: #1c1e21;
+  --color-mute: #5e5e5e;
+  --color-line: #e8e2d6;
+  --font-brand: Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    font-family: var(--font-brand);
+    @apply bg-stone-page text-stone-ink text-[16px] font-normal leading-[1.4];
+    min-height: 100vh;
+  }
+
+  /* WhatsApp-style hierarchy: size over weight */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-brand);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+}
+
+@layer components {
+  .brand-mark {
+    @apply font-display text-primary font-normal tracking-tight;
+  }
+
+  .brand-tagline {
+    @apply text-[10px] font-normal uppercase tracking-[0.22em] text-stone-mute;
+  }
+
+  .display-xl {
+    @apply font-display text-5xl font-normal leading-none tracking-tight md:text-6xl xl:text-7xl;
+  }
+
+  .display-lg {
+    @apply font-display text-3xl font-normal leading-none tracking-tight md:text-4xl;
+  }
+
+  .display-md {
+    @apply font-display text-2xl font-normal leading-tight tracking-tight md:text-3xl;
+  }
+
+  .btn-primary {
+    @apply w-full rounded-full py-3.5 px-6 bg-primary text-white font-normal text-base
+      transition duration-300 hover:bg-primary-dark
+      focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2
+      disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply text-sm font-normal text-primary hover:text-primary-dark underline-offset-2 hover:underline;
+  }
+
+  .input-field {
+    @apply w-full rounded-full px-5 py-3.5 bg-white border border-stone-line text-stone-ink
+      placeholder:text-stone-mute/70 transition
+      focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15;
+  }
+
+  .auth-panel {
+    @apply relative w-full max-w-md bg-stone-panel/95 border border-stone-line
+      backdrop-blur-sm px-8 py-10 rounded-[1.5rem];
+  }
+
+  .alert-success {
+    @apply mb-4 border-l-4 border-primary bg-primary-muted/60 px-4 py-3 text-sm text-primary-dark;
+  }
+
+  .alert-error {
+    @apply mb-4 border-l-4 border-red-700 bg-red-50 px-4 py-3 text-sm text-red-800;
+  }
+
+  .metric-strip {
+    @apply grid border border-stone-line bg-stone-panel rounded-[1.25rem] overflow-hidden;
+  }
+
+  .metric-cell {
+    @apply px-5 py-5 md:px-6 md:py-6 border-stone-line;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-normal text-stone-mute
+      transition-colors hover:bg-primary-muted/50 hover:text-primary;
+  }
+
+  .nav-link-active {
+    @apply bg-primary text-white hover:bg-primary-dark hover:text-white;
+  }
+
+  .page-toolbar {
+    @apply mb-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between;
+  }
+
+  .data-table {
+    @apply min-w-full text-left text-sm tabular-nums;
+  }
+
+  .data-table thead tr {
+    @apply border-b border-stone-line text-[11px] font-normal uppercase tracking-[0.14em] text-stone-mute;
+  }
+
+  .data-table th {
+    @apply pb-3 pr-4 font-normal;
+  }
+
+  .data-table tbody tr {
+    @apply border-b border-stone-line/70 last:border-0;
+  }
+
+  .data-table td {
+    @apply py-3.5 pr-4 text-stone-ink;
+  }
+
+  .font-amount {
+    @apply font-medium tabular-nums tracking-tight;
+  }
+
+  .btn-table {
+    @apply inline-flex items-center justify-center rounded-full border border-stone-line px-2.5 py-1.5
+      text-xs font-normal text-primary transition
+      hover:border-primary hover:bg-primary-muted/40;
+  }
+
+  .btn-toolbar {
+    @apply inline-flex items-center gap-2 rounded-full border border-primary bg-primary px-4 py-2
+      text-sm font-normal text-white transition hover:bg-primary-dark;
+  }
+
+  .btn-toolbar-outline {
+    @apply inline-flex items-center gap-2 rounded-full border border-stone-ink/80 bg-transparent px-4 py-2
+      text-sm font-normal text-stone-ink transition hover:border-primary hover:text-primary;
+  }
+
+  .page-tabs {
+    @apply flex flex-wrap gap-1 border-b border-stone-line;
+  }
+
+  .page-tab {
+    @apply inline-flex items-center gap-2 px-4 py-3 text-sm font-normal text-stone-mute
+      transition hover:text-primary;
+  }
+
+  .page-tab-active {
+    @apply border-b-2 border-primary text-primary;
+  }
+}

@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+enum MaritalStatus {
+  single
+  married
+  divorced
+  widowed
+}
+
+enum TransactionType {
+  deposit
+  withdrawal
+}
+
+enum LoanStatus {
+  pending
+  approved
+  rejected
+  completed
+}
+
+enum LoanRepaymentStatus {
+  pending
+  paid
+}
+
+enum ConversationKind {
+  direct
+  room
+}
+
+model User {
+  user_id               Int            @id @default(autoincrement())
+  name                  String         @db.VarChar(100)
+  email                 String         @unique @db.VarChar(150)
+  password_hash         String         @db.Text
+  role                  UserRole       @default(user)
+  created_at            DateTime?      @default(now()) @db.Timestamp(0)
+  updated_at            DateTime?      @updatedAt @db.Timestamp(0)
+  identification_number String?        @db.VarChar(50)
+  date_of_birth         DateTime?      @db.Date
+  place_of_birth        String?        @db.VarChar(100)
+  residence_place       String?        @db.VarChar(100)
+  telephone             String?        @db.VarChar(20)
+  address               String?        @db.VarChar(255)
+  position              String?        @db.VarChar(100)
+  place_of_working      String?        @db.VarChar(100)
+  marital_status        MaritalStatus?
+  spouse_name           String?        @db.VarChar(100)
+  spouse_id_number      String?        @db.VarChar(50)
+  spouse_telephone      String?        @db.VarChar(20)
+  shares                Decimal        @default(0.00) @db.Decimal(10, 2)
+  monthly_saving        Decimal        @default(0.00) @db.Decimal(10, 2)
+  otp                   String?        @db.VarChar(6)
+  otp_expiry            BigInt?
+  token_version         Int            @default(0)
+  first_time_login      Boolean        @default(true)
+
+  accounts      Account[]
+  loans         Loan[]
+  adminLogs     AdminLog[]
+  conversations ConversationParticipant[]
+  sentMessages  Message[]                  @relation("SentMessages")
+
+  @@map("users")
+}
+
+model Account {
+  account_id    Int       @id @default(autoincrement())
+  user_id       Int
+  balance       Decimal   @default(0.00) @db.Decimal(15, 2)
+  created_at    DateTime? @default(now()) @db.Timestamp(0)
+  updated_at    DateTime? @updatedAt @db.Timestamp(0)
+  accountnumber Int       @unique
+
+  user         User          @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([user_id])
+  @@map("accounts")
+}
+
+model Transaction {
+  transaction_id     Int             @id @default(autoincrement())
+  account_id         Int
+  transaction_type   TransactionType
+  amount             Decimal         @db.Decimal(15, 2)
+  transaction_date   DateTime?       @default(now()) @db.Timestamp(0)
+  description        String?         @db.Text
+  transaction_number Int             @unique
+
+  account Account @relation(fields: [account_id], references: [account_id], onDelete: Cascade)
+
+  @@index([account_id])
+  @@map("transactions")
+}
+
+model Loan {
+  loan_id           Int        @id @default(autoincrement())
+  user_id           Int
+  amount            Decimal    @db.Decimal(15, 2)
+  status            LoanStatus @default(pending)
+  repayment_period  Int
+  created_at        DateTime?  @default(now()) @db.Timestamp(0)
+  updated_at        DateTime?  @updatedAt @db.Timestamp(0)
+
+  user       User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  repayments LoanRepayment[]
+
+  @@index([user_id])
+  @@map("loans")
+}
+
+model LoanRepayment {
+  repayment_id Int                 @id @default(autoincrement())
+  loan_id      Int
+  amount       Decimal             @db.Decimal(15, 2)
+  due_date     DateTime            @db.Date
+  status       LoanRepaymentStatus @default(pending)
+  payment_date DateTime?           @db.Timestamp(0)
+
+  loan Loan @relation(fields: [loan_id], references: [loan_id], onDelete: Cascade)
+
+  @@index([loan_id])
+  @@map("loan_repayments")
+}
+
+model AdminLog {
+  log_id         Int       @id @default(autoincrement())
+  admin_id       Int
+  action         String    @db.Text
+  timestamp      DateTime? @default(now()) @db.Timestamp(0)
+  affected_table String    @db.VarChar(255)
+  details        String    @db.VarChar(255)
+
+  admin User @relation(fields: [admin_id], references: [user_id], onDelete: Cascade)
+
+  @@index([admin_id])
+  @@map("admin_logs")
+}
+
+model Conversation {
+  conversation_id Int              @id @default(autoincrement())
+  kind            ConversationKind
+  title           String?          @db.VarChar(120)
+  created_at      DateTime?        @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?        @updatedAt @db.Timestamp(0)
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([kind])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  conversation_id Int
+  user_id         Int
+  last_read_at    DateTime? @db.Timestamp(0)
+  joined_at       DateTime? @default(now()) @db.Timestamp(0)
+
+  conversation Conversation @relation(fields: [conversation_id], references: [conversation_id], onDelete: Cascade)
+  user         User         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@id([conversation_id, user_id])
+  @@index([user_id])
+  @@map("conversation_participants")
+}
+
+model Message {
+  message_id      Int       @id @default(autoincrement())
+  conversation_id Int
+  sender_id       Int
+  body            String    @db.VarChar(2000)
+  created_at      DateTime? @default(now()) @db.Timestamp(0)
+
+  conversation Conversation @relation(fields: [conversation_id], references: [conversation_id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [sender_id], references: [user_id], onDelete: Cascade)
+
+  @@index([conversation_id, message_id])
+  @@index([sender_id])
+  @@map("messages")
+}
